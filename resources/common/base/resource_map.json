@@ -1,0 +1,46 @@
+{
+  "versionDefName": "SYSTEM_RESOURCE_VERSION",
+  "comments": "This file contains resource definitions that are shared between PRF and Normal FW",
+  "media": [
+    {
+      "type": "pbi8",
+      "name": "ACTION_BAR_ICON_CHECK",
+      "file": "common/base/images/action_bar_icon_check.png"
+    },
+    {
+      "type": "pbi8",
+      "name": "ACTION_BAR_ICON_X",
+      "file": "common/base/images/action_bar_icon_x.png"
+    },
+    {
+      "type": "pdc",
+      "name": "BT_PAIR_SUCCESS",
+      "file": "common/base/images/bt_pair_success.svg"
+    },
+    {
+      "type": "pdc",
+      "name": "BT_PAIR_FAILURE",
+      "file": "common/base/images/bt_pair_failure.svg"
+    },
+    {
+      "type": "pdc",
+      "name": "BT_PAIR_APPROVE_ON_PHONE",
+      "file": "common/base/images/bt_pair_approve_on_phone.svg"
+    },
+    {
+      "type": "pdc",
+      "name": "BT_PAIR_CONFIRMATION",
+      "file": "common/base/images/bt_pair_confirmation.svg"
+    },
+    {
+      "type": "pdc",
+      "name": "GENERIC_WARNING_LARGE",
+      "file": "common/base/images/Pebble_80x80_Generic_warning.svg"
+    },
+    {
+      "type": "png",
+      "name": "SPINNER_BACKGROUND",
+      "file": "common/base/images/spinner_background.png"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "comments": "This file contains resource definitions for PRF and 'common' overrides",
+  "media": [
+    {
+      "type": "pdc",
+      "name": "GENERIC_CONFIRMATION_LARGE",
+      "file": "prf/base/images/Pebble_80x80_Generic_confirmation.svg"
+    },
+    {
+      "type": "pdc",
+      "name": "RECOVERY_LOW_POWER_DISCHARGING",
+      "file": "prf/base/images/Pebble-PRF_low_power_discharging.svg"
+    },
+    {
+      "type": "pdc",
+      "name": "RECOVERY_LOW_POWER_CHARGING",
+      "file": "prf/base/images/Pebble-PRF_low_power_charging.svg"
+    },
+    {
+      "type": "pdc",
+      "name": "LAUNCH_APP",
+      "file": "prf/base/images/Pebble-PRF_launch_app.svg"
+    },
+    {
+      "type": "png",
+      "name": "MOBILE_APP_ICON",
+      "file": "prf/base/images/Pebble-PRF_mobile_app_icon.png"
+    },
+    {
+      "type": "png",
+      "name": "TEST_IMAGE_PINWHEEL",
+      "file": "prf/base/images/pinwheel-144x168.png"
+    },
+    {
+      "type": "png",
+      "name": "TEST_IMAGE_VEGGIES",
+      "file": "prf/base/images/veggies-144x168.png"
+    },
+    {
+      "type": "font",
+      "name": "MINCHO_20_PAIR",
+      "file": "prf/base/ttf/sazanami-mincho.ttf",
+      "characterRegex": "[ペアリング]"
+    },
+    {
+      "name": "FONT_FALLBACK_INTERNAL",
+      "characterRegex": null,
+      "aliases": [
+        "BITHAM_34_MEDIUM_NUMBERS",
+        "GOTHIC_14_BOLD",
+        "GOTHIC_18",
+        "GOTHIC_28",
+        "GOTHIC_28_BOLD"
+      ]
+    }
+  ]
+}
+

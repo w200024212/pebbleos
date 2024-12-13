@@ -1,0 +1,15 @@
+sources = [bld.path.make_node("startup_stm32.c")]
+if bld.is_tintin():
+    sources.append(bld.path.make_node("system_stm32f2xx.c"))
+elif bld.is_snowy_compatible() or bld.is_silk():
+    sources.append(bld.path.make_node("system_stm32f4xx.c"))
+elif bld.is_cutts() or bld.is_robert():
+    sources.append(bld.path.make_node("system_stm32f7xx.c"))
+else:
+    bld.fatal("No clock configuration file specified for this platform")
+    
+bld.objects(
+    name='startup',
+    source=sources,
+    use=['fw_includes']
+)

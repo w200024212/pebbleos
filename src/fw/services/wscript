@@ -1,0 +1,93 @@
+def configure(conf):
+    pass
+
+def build(bld):
+    # Generate Pebble Protocol endpoints table:
+    bld.recurse('common/comm_session')
+
+    def _build_services(bld, sources):
+        bld.gettext(source=sources, target='services.pot')
+        bld.stlib(source=sources,
+                  target='fw_services',
+                  use=['fw_includes',
+                       'freertos_includes',
+                       'bt_driver',
+                       'root_includes'])
+
+    def _build_normal_recovery_services(bld):
+        def _get_excludes(bld):
+            excludes = []
+
+            # Platform based excludes
+            if bld.is_tintin():
+                excludes.append('normal/activity/**')
+                excludes.append('normal/weather/**')
+                excludes.append('normal/voice/**')
+                excludes.append('normal/accessory/**')
+                excludes.append('prf/accessory/**')
+                excludes.append('common/compositor/default/**')
+                excludes.append('normal/vibes/vibe_client.c')
+                excludes.append('normal/vibes/vibe_score.c')
+                excludes.append('normal/vibes/vibe_score_info.c')
+            else:
+                excludes.append('common/legacy/*registry*.c')
+                if bld.is_silk():
+                    excludes.append('common/compositor/default/compositor_modal_transitions.*')
+                else:
+                    excludes.append('common/compositor/legacy/compositor_modal_slide_transitions.*')
+
+            # Capability based excludes
+            if bld.capability('HAS_SPRF_V3'):
+                excludes.append('common/shared_prf_storage/v2_sprf/**')
+            else:
+                excludes.append('common/shared_prf_storage/v3_sprf/**')
+
+            if not bld.capability('HAS_BUILTIN_HRM'):
+                excludes.append('common/hrm/**')
+                excludes.append('normal/bluetooth/ble_hrm.c')
+
+            if not bld.capability('HAS_MAGNETOMETER'):
+                excludes.append('common/ecompass.c')
+
+            return excludes
+
+        excludes = _get_excludes(bld)
+
+        # get common services
+        sources = []
+        sources.extend(bld.path.ant_glob('common/**/*.c', excl=excludes))
+
+        if bld.variant == 'prf':
+            # get recovery services
+            sources.extend(bld.path.ant_glob('prf/**/*.c', excl=excludes))
+        else:
+            # get normal services
+            sources.extend(bld.path.ant_glob('normal/**/*.c', excl=excludes))
+
+        if bld.env.QEMU:
+            # get qemu services
+            sources.extend(bld.path.ant_glob('qemu/**/*.c', excl=excludes))
+
+        sources.extend(bld.path.ant_glob('*.c', excl=excludes))
+
+        # This could really be based on what accel driver is in use
+        if bld.is_tintin():
+            accel_manager_to_remove = 'common/accel_manager.c'
+        else:
+            accel_manager_to_remove = 'legacy/accel_manager.c'
+
+        sources = [x for x in sources if not x.abspath().endswith(accel_manager_to_remove)]
+
+        _build_services(bld, sources)
+
+    if bld.env.VOICE_CODEC_TESTS:
+        voice_sample_target = bld.path.get_bld().make_node('normal/voice/voice_test_sample.auto.h')
+        bld(features='binary_header',
+            source='normal/voice/sample.pcm',
+            target=voice_sample_target,
+            array_name='s_voice_test_sample')
+
+    _build_normal_recovery_services(bld)
+
+
+# vim:filetype=python

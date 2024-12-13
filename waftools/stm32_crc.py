@@ -1,0 +1,1 @@
+../tools/stm32_crc.py

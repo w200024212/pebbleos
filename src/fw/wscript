@@ -1,0 +1,674 @@
+from waflib import Build, Task
+from waflib.Tools.ccroot import link_task
+from waflib.TaskGen import before_method, feature
+import waflib.Logs
+
+import waftools.asm
+import waftools.compress
+import waftools.gitinfo
+import waftools.ldscript
+import waftools.objcopy
+import waftools.generate_log_strings_json
+import waftools.generate_timezone_data
+import tools.mpu_calc
+
+import collections
+import json
+import os
+
+from waflib.Configure import conf
+
+
+@feature("c")
+@before_method('apply_link')
+def use_group_link(self):
+    """
+    Use a link group to resolve dependencies
+    """
+    if 'cprogram' in self.features and getattr(self, 'link_group', False):
+        self.features.insert(0, "group_cprogram")
+
+
+class group_cprogram(link_task):
+    run_str = '${LINK_CC} ${LINKFLAGS} ${CCLNK_SRC_F}${SRC} ${CCLNK_TGT_F}${TGT[0].abspath()} ${RPATH_ST:RPATH} ${FRAMEWORKPATH_ST:FRAMEWORKPATH} ${FRAMEWORK_ST:FRAMEWORK} ${ARCH_ST:ARCH} -Wl,--start-group ${STLIB_MARKER} ${STLIBPATH_ST:STLIBPATH} ${STLIB_ST:STLIB} ${SHLIB_MARKER} ${LIBPATH_ST:LIBPATH} ${LIB_ST:LIB} -Wl,--end-group'
+    ext_out=['.bin']
+    vars=['LINKDEPS']
+    inst_to='${BINDIR}'
+
+
+@conf
+def get_pbz_node(ctx, fw_type, board_type, version_string):
+    return ctx.path.get_bld().make_node('{}_{}_{}.pbz'.format(fw_type, board_type, version_string))
+
+
+@conf
+def get_pbpack_node(ctx):
+    return ctx.path.get_bld().make_node('system_resources.pbpack')
+
+
+@conf
+def get_tintin_fw_node(ctx, subdir=None):
+    subpath = 'src/fw/tintin_fw.bin'
+    if subdir:
+        subpath = os.path.join(subdir, subpath)
+    return ctx.path.get_bld().make_node(subpath)
+
+
+@conf
+def get_tintin_fw_node_prf(ctx):
+    return ctx.get_tintin_fw_node('prf')
+
+
+@conf
+def get_tintin_boot_node(ctx):
+    return ctx.path.get_bld().make_node('src/boot/tintin_boot.bin')
+
+
+def options(opt):
+    pass
+
+
+
+def configure(conf):
+    conf.load('binary_header')
+    conf.recurse('vendor')
+    conf.recurse('applib')
+    conf.recurse('services')
+
+    if conf.is_silk():
+        conf.env.append_value('DEFINES', ['MFG_INFO_RECORDS_TEST_RESULTS'])
+
+    if conf.options.sdkshell:
+        conf.env.NORMAL_SHELL = 'sdk'
+        conf.env.append_value('DEFINES', ['SHELL_SDK'])
+    else:
+        conf.env.NORMAL_SHELL = 'normal'
+
+
+def _generate_memory_layout(bld):
+
+    if bld.is_cutts() or bld.is_robert():
+        ldscript_template = bld.path.find_node('stm32f7xx_flash_fw.ld.template')
+    elif bld.is_silk():
+        ldscript_template = bld.path.find_node('stm32f412_flash_fw.ld.template')
+    elif bld.is_snowy_compatible():
+        ldscript_template = bld.path.find_node('stm32f439_flash_fw.ld.template')
+    elif bld.is_tintin():
+        ldscript_template = bld.path.find_node('stm32f2xx_flash_fw.ld.template')
+
+    # Determine bootloader size so we can later calculate FLASH_LENGTH_*
+    if bld.env.MICRO_FAMILY == 'STM32F2':
+        flash_size = '512K'
+        bootloader_size = '16K'
+
+    elif bld.env.MICRO_FAMILY == 'STM32F4':
+        if bld.env.BOARD in ('snowy_evt', 'snowy_evt2', 'spalding_evt'):
+            bootloader_size = '64K'
+        else:
+            bootloader_size = '16K'
+        if bld.is_silk() and bld.variant == 'prf':
+            # silk PRF is limited to 512k to save on SPI flash space
+            flash_size = '512K'
+        else:
+            flash_size = '1024K'
+
+    elif bld.env.MICRO_FAMILY == 'STM32F7':
+        bootloader_size = '32K'
+        flash_size = '2048K'
+
+    if bld.env.QEMU:
+        flash_size = '4M'
+
+    if bld.env.FLASH_ITCM:
+        flash_origin = '0x00200000'
+    else:
+        flash_origin = '0x08000000'
+
+    # Determine FLASH_LENGTH_*
+    fw_flash_length = '%(flash_size)s - %(bootloader_size)s' % locals()
+    fw_flash_origin = '%(flash_origin)s + %(bootloader_size)s' % locals()
+
+    if bld.env.MICRO_FAMILY == 'STM32F2' and bld.variant == '':
+        # If we're building a tintin normal firmware make sure to plug in all the symbols that we
+        # want to use from the bootloader.
+
+        with open(bld.path.find_node('bootloader_symbols.json').abspath(), 'r') as f:
+            bootloader_symbols_json = json.load(f)
+
+        bootloader_symbols = bootloader_symbols_json['bootloader_symbols'].iteritems()
+        bootloader_symbol_strings = ("%s = %s;" % (n, v) for n, v in bootloader_symbols)
+        bootloader_symbol_definitions = "\n    ".join(bootloader_symbol_strings)
+    else:
+        bootloader_symbol_definitions = ""
+
+    # Determine ram layout
+
+    # Each tuple defines the amount of RAM we give to apps (stack + text + data
+    # + bss + heap) and the amount of RAM reserved for the application runtime
+    # (AppState) for each SDK platform, respectively.
+    AppRamSize = collections.namedtuple('AppRamSize',
+                                        'app_segment runtime_reserved')
+    APP_RAM_SIZES = {
+        'aplite': AppRamSize(25952, 6820),
+        'basalt': AppRamSize(66 * 1024, 30 * 1024),
+        'chalk': AppRamSize(66 * 1024, 30 * 1024),
+        # FIXME: The runtime_reserved size could be reduced for diorite
+        'diorite': AppRamSize(66 * 1024, 30 * 1024),
+        'emery': AppRamSize(130 * 1024, 62 * 1024),
+    }
+    APP_UNSUPPORTED = AppRamSize(0, 0)
+
+    # The process loader enforces eight-byte alignment on all segments, so
+    # configuring a segment with a size that is not a multiple of eight will
+    # result in segments being smaller than expected. The runtime_reserved
+    # size is not checked as its value isn't currently used anywhere.
+    for platform, sizes in APP_RAM_SIZES.iteritems():
+        if sizes.app_segment % 8 != 0:
+            bld.fatal("The app_segment size for APP_RAM_SIZES[%r] is not a "
+                      "multiple of eight bytes. You're gonna have a bad "
+                      "time." % platform)
+
+    # In the FW, the app execution environment is based on the major FW version with which the SDK
+    # is associated. Each model supports a different set of SDK platforms, and determines the SDK
+    # platform of an app using these major FW version associations (and also by considering the
+    # hardware capabilities watch model itself - i.e. chalk vs basalt). We want to define
+    # APP_RAM_*X_SIZE macros for each app execution environment supported by the model so we
+    # don't need to hard-code these in the FW itself.
+    if bld.is_tintin():
+        app_ram_size_2x = APP_RAM_SIZES['aplite']
+        app_ram_size_3x = APP_RAM_SIZES['aplite']
+        app_ram_size_4x = APP_UNSUPPORTED
+        # We have a 128k continuous block of RAM.
+        total_ram = (0x20000000, 128 * 1024)
+    elif bld.is_snowy():
+        app_ram_size_2x = APP_RAM_SIZES['aplite']
+        app_ram_size_3x = APP_RAM_SIZES['basalt']
+        app_ram_size_4x = APP_RAM_SIZES['basalt']
+        # We have a 192k continuous block of RAM, plus a separate 64k of CCM which we don't care
+        # about here.
+        total_ram = (0x20000000, 192 * 1024)
+    elif bld.is_spalding():
+        app_ram_size_2x = APP_UNSUPPORTED
+        app_ram_size_3x = APP_RAM_SIZES['chalk']
+        app_ram_size_4x = APP_RAM_SIZES['chalk']
+        # We have a 192k continuous block of RAM, plus a separate 64k of CCM which we don't care
+        # about here.
+        total_ram = (0x20000000, 192 * 1024)
+    elif bld.is_silk():
+        app_ram_size_2x = APP_RAM_SIZES['aplite']
+        app_ram_size_3x = APP_RAM_SIZES['aplite']
+        app_ram_size_4x = APP_RAM_SIZES['diorite']
+        # We have a 256k continuous block of RAM.
+        total_ram = (0x20000000, 256 * 1024)
+    elif bld.is_cutts() or bld.is_robert():
+        app_ram_size_2x = APP_RAM_SIZES['aplite']
+        app_ram_size_3x = APP_RAM_SIZES['basalt']
+        app_ram_size_4x = APP_RAM_SIZES['emery']
+        # We block off the 128k of DTCM for variables marked as DTCM_BSS. We use the remaining 384k
+        # of SRAM as a continuous block of RAM.
+        total_ram = (0x20020000, 384 * 1024)
+    else:
+        bld.fatal("No set of supported SDK platforms defined for this board")
+
+    # Allocate RAM from the end to the start. Do the app first, then the worker, then give whatever
+    # is left to the kernel.
+    ram_end = sum(total_ram)  # The end of RAM is the start address plus the size.
+    all_app_ram_sizes = [app_ram_size_2x, app_ram_size_3x, app_ram_size_4x]
+    app_ram_size = max(sum(x) for x in all_app_ram_sizes)
+    system_app_segment_size = max(x.app_segment for x in all_app_ram_sizes)
+    app_runtime_size = max(x.runtime_reserved for x in all_app_ram_sizes)
+    if app_ram_size <= 0 or app_runtime_size <= 0:
+        bld.fatal("App RAM is too small!")
+    app_ram = (ram_end - app_ram_size, app_ram_size)
+    worker_ram_size = 12 * 1024  # The worker always gets 12k of RAM.
+    worker_ram = (ram_end - app_ram_size - worker_ram_size, worker_ram_size)
+    kernel_ram_size = total_ram[1] - app_ram_size - worker_ram_size
+    kernel_ram = (total_ram[0], kernel_ram_size)
+
+    # As a basic sanity check, make sure we're giving the kernel at least 64k.
+    if kernel_ram_size < 64 * 1024:
+        bld.fatal("Kernel RAM is too small!")
+
+    ldscript_result = ldscript_template.get_bld().change_ext('.ld', ext_in='.ld.template')
+
+    bld(features='subst',
+        source=ldscript_template,
+        target=ldscript_result,
+        KERNEL_RAM_ADDR="0x{:x}".format(kernel_ram[0]),
+        KERNEL_RAM_SIZE=kernel_ram[1],
+        APP_RAM_ADDR="0x{:x}".format(app_ram[0]),
+        APP_RAM_SIZE=app_ram[1],
+        WORKER_RAM_ADDR="0x{:x}".format(worker_ram[0]),
+        WORKER_RAM_SIZE=worker_ram[1],
+        FLASH_ORIGIN=flash_origin,
+        FW_FLASH_ORIGIN=fw_flash_origin,
+        FW_FLASH_LENGTH=fw_flash_length,
+        FLASH_SIZE=flash_size,
+        BOOTLOADER_SYMBOLS=bootloader_symbol_definitions)
+
+    app_mpu_region = tools.mpu_calc.find_subregions_for_region(app_ram[0], app_ram[1])
+    worker_mpu_region = tools.mpu_calc.find_subregions_for_region(worker_ram[0], worker_ram[1])
+
+    bld(features='subst',
+        source=bld.path.find_node('kernel/mpu_regions.template.h'),
+        target=bld.path.get_bld().make_node('kernel/mpu_regions.auto.h'),
+        APP_BASE_ADDRESS="0x{:x}".format(app_mpu_region.address),
+        APP_SIZE="0x{:x}".format(app_mpu_region.size),
+        APP_DISABLED_SUBREGIONS="0b{:08b}".format(app_mpu_region.disabled_subregion),
+        WORKER_BASE_ADDRESS="0x{:x}".format(worker_mpu_region.address),
+        WORKER_SIZE="0x{:x}".format(worker_mpu_region.size),
+        WORKER_DISABLED_SUBREGIONS=" 0b{:08b}".format(worker_mpu_region.disabled_subregion))
+
+    bld(features='subst',
+        source=bld.path.find_node('process_management/sdk_memory_limits.template.h'),
+        target=bld.path.get_bld().make_node('process_management/sdk_memory_limits.auto.h'),
+        APP_RAM_2X_SIZE=str(app_ram_size_2x.app_segment),
+        APP_RAM_3X_SIZE=str(app_ram_size_3x.app_segment),
+        APP_RAM_4X_SIZE=str(app_ram_size_4x.app_segment),
+        APP_RAM_SYSTEM_SIZE=str(system_app_segment_size))
+
+    return ldscript_result
+
+
+def _link_firmware(bld, sources):
+    if bld.is_spalding():
+        sources += ['board/displays/display_spalding.c']
+
+    fw_linkflags = ['-Wl,--cref',
+                    '-Wl,-Map=tintin_fw.map',
+                    '-Wl,--gc-sections',
+                    '-Wl,--build-id=sha1',
+                    '-Wl,--sort-section=alignment',
+                    '-nostdlib']
+
+    fw_linkflags.extend(['-Wl,--wrap=malloc',
+                         '-Wl,--undefined=__wrap_malloc',
+                         '-Wl,--wrap=realloc',
+                         '-Wl,--undefined=__wrap_realloc',
+                         '-Wl,--wrap=calloc',
+                         '-Wl,--undefined=__wrap_calloc',
+                         '-Wl,--wrap=free',
+                         '-Wl,--undefined=__wrap_free'])
+
+    uses = ['applib',
+            'board',
+            'bt_driver',
+            'drivers',
+            'freertos',
+            'fw_services',
+            'gcc',
+            'proto_schemas',
+            'jerry_core',
+            'jerry_libm',
+            'libbtutil',
+            'libos',
+            'libutil',
+            'nanopb',
+            'pblibc',
+            'root_includes',
+            'startup',
+            'tinymt32',
+            'upng']
+
+    ldscript = _generate_memory_layout(bld)
+
+    if bld.env.NO_LINK:
+        # Only build the object files
+        bld.objects(source=sources,
+                    use=uses,
+                    includes='fonts')
+    else:
+        # ..and actually build and link the firmware ELF
+        elf_node = bld.path.get_bld().make_node('tintin_fw.elf')
+        bld.program(source=sources,
+                    use=uses,
+                    link_group=True,
+                    lib=['gcc'],
+                    target=elf_node,
+                    includes='fonts',
+                    ldscript=[ldscript, 'fw_common.ld'],
+                    linkflags=fw_linkflags)
+
+        if bld.env.FLASH_ITCM:
+            # 0x07E00000 is the difference between the flash memory address and the flash ITCM
+            # address. We need to add this because otherwise OpenOCD is unable to write the
+            # image into the flash chip.
+            extra_args = '--change-addresses 0x07E00000'
+        else:
+            extra_args = ''
+
+        hex_node = elf_node.change_ext('.hex')
+        bld(rule=waftools.objcopy.objcopy_hex, source=elf_node, target=hex_node, extra_args=extra_args)
+        bin_node = elf_node.change_ext('.bin')
+        bld(rule=waftools.objcopy.objcopy_bin, source=elf_node, target=bin_node)
+
+        # Create the log_strings .elf and check the format specifier rules
+        if 'PBL_LOGS_HASHED' in bld.env.DEFINES:
+            fw_loghash_node = bld.path.get_bld().make_node('tintin_fw_loghash_dict.json')
+            bld(rule=waftools.generate_log_strings_json.wafrule,
+                source=elf_node, target=fw_loghash_node)
+            bld.LOGHASH_DICTS.append(fw_loghash_node)
+
+
+def _get_mfg_paths(bld):
+    """Return a list of directories we want to build to support manufacturing on a platform"""
+
+    if bld.is_tintin():
+        return ('mfg/tintin',)
+    elif bld.is_snowy():
+        return ('mfg/snowy',)
+    elif bld.is_spalding():
+        return ('mfg/spalding',)
+    elif bld.is_silk():
+        return ('mfg/silk',)
+    elif bld.is_cutts():
+        # This probably should end up as 'mfg/cutts' if this comes back
+        return ('mfg/robert',)
+    elif bld.is_robert():
+        return ('mfg/robert',)
+    else:
+        bld.fatal('No MFG configuration for board %s' % bld.env.BOARD)
+
+def _get_dbg_paths(bld):
+    """Return a list of directories we want to build to support debug logging on a platform"""
+
+    if bld.is_tintin():
+        return ('debug/legacy',)
+    else:
+        return ('debug/default',)
+
+def _gen_fpga_bitstream_header(bld):
+    if bld.is_snowy():
+        if bld.env.BOARD in ('snowy_bb', 'snowy_evt'):
+            source_bitstream = '../../platform/snowy/snowy_framebuffer_evt.fpga'
+        else:
+            source_bitstream = '../../platform/snowy/Snowy_LP1K_framebuffer.fpga'
+    elif bld.is_spalding():
+        if bld.env.BOARD in ('spalding_bb2',):
+            source_bitstream = '../../platform/snowy/Spalding_LP1K_framebuffer.fpga'
+        else:
+            source_bitstream = '../../platform/snowy/Spalding_UL1K_framebuffer.fpga'
+    elif bld.is_cutts():
+        source_bitstream = '../../platform/robert/Cutts_UL1K_framebuffer_144x168_bitmap.fpga'
+    elif bld.is_robert():
+        source_bitstream = '../../platform/robert/Robert_UL1K_framebuffer_bitmap.fpga'
+    else:
+        bld.fatal('No FPGA available for {}'.format(bld.env.BOARD))
+
+    bld(features='binary_header',
+        source=source_bitstream,
+        target='drivers/display/ice40lp/fpga_bitstream.auto.h',
+        array_name='s_fpga_bitstream',
+        compressed=True)
+
+def _get_comm_sources(bld, is_recovery):
+    excl = []
+    if bld.env.QEMU:
+        excl.append('comm/internals/profiles/ispp.c')
+
+    if is_recovery:
+        excl.append('comm/ble/kernel_le_client/ancs/*.c')
+        excl.append('comm/ble/kernel_le_client/ams/*.c')
+    else:
+        excl.append('comm/prf_stubs/*')
+
+    return bld.path.ant_glob('comm/**/*.c', excl=excl)
+
+
+def _build_recovery(bld):
+    source_dirs = ['apps/core_apps/**',
+                   'apps/prf_apps/**',
+                   'process_management',
+                   'process_state/**',
+                   'console',
+                   'debug',
+                   'flash_region',
+                   'graphics',
+                   'kernel/**',
+                   'mfg',
+                   'mfg/mfg_apps',
+                   'mfg/mfg_mode',
+                   'resource',
+                   'syscall',
+                   'system',
+                   'shell',
+                   'shell/prf/**',
+                   'util/**']
+
+    source_dirs.extend(_get_mfg_paths(bld))
+    source_dirs.extend(_get_dbg_paths(bld))
+
+    excludes = ['process_management/app_custom_icon.c',
+                'process_management/app_menu_data_source.c',
+                'resource/resource_storage_file.c']
+
+    if 'MFG_INFO_RECORDS_TEST_RESULTS' not in bld.env.DEFINES:
+        excludes.extend('mfg/results_ui.c')
+
+    if bld.is_silk():
+        bld.env.append_value('DEFINES', ['QSPI_DMA_DISABLE=1'])
+
+    sources = sum([bld.path.ant_glob('%s/*.c' % d, excl=excludes) for d in source_dirs], [])
+    sources.extend(_get_comm_sources(bld, True))
+    sources.extend(bld.path.ant_glob('*.c'))
+    sources.extend(bld.path.ant_glob('*.[sS]'))
+
+    sources.append(bld.path.make_node('popups/bluetooth_pairing_ui.c'))
+
+    sources.append(bld.path.get_bld().make_node('builtin_resources.auto.c'))
+
+    if bld.is_snowy_compatible() or bld.is_cutts() or bld.is_robert():
+        _gen_fpga_bitstream_header(bld)
+
+    if bld.is_snowy():
+        bld(features='binary_header',
+            source='../../platform/snowy/snowy_boot.fpga',
+            target='mfg/snowy/snowy_boot.fpga.auto.h',
+            array_name='s_boot_fpga')
+    elif bld.is_spalding():
+        bld(features='binary_header',
+            source='../../platform/snowy/spalding_boot.fpga',
+            target='mfg/spalding/spalding_boot.fpga.auto.h',
+            array_name='s_boot_fpga')
+
+    if 'BOOTLOADER_TEST_STAGE1=1' in bld.env.DEFINES:
+        bld(features='binary_header',
+            source=bld.path.make_node('../../bootloader_test_stage2.bin'),
+            target='bootloader_test_bin.auto.h',
+            array_name='s_bootloader_test_stage2')
+
+
+    if bld.env.DISABLE_PROMPT:
+        sources = [ x for x in sources if not x.abspath().endswith('console/prompt.c') ]
+        sources = [ x for x in sources if not x.abspath().endswith('console/prompt_commands.c') ]
+
+    _link_firmware(bld, sources)
+
+
+def _get_launcher_globs_to_exclude(bld):
+    system_launchers_root_path = 'apps/system_apps/launcher/'
+    legacy_launcher_glob = system_launchers_root_path + 'legacy/**'
+    default_launcher_glob = system_launchers_root_path + 'default/**'
+    launcher_globs_to_exclude = [legacy_launcher_glob, default_launcher_glob]
+
+    if bld.is_tintin():
+        launcher_glob_to_use = legacy_launcher_glob
+    else:
+        launcher_glob_to_use = default_launcher_glob
+
+    launcher_globs_to_exclude.remove(launcher_glob_to_use)
+    return launcher_globs_to_exclude
+
+
+def _build_normal(bld):
+    # Generate timezone data
+    olson_txt = bld.srcnode.make_node('resources/normal/base/tzdata/timezones_olson.txt')
+    tzdata_bin = bld.bldnode.make_node('resources/normal/base/tzdata/tzdata.bin.reso')
+    bld(rule=waftools.generate_timezone_data.wafrule,
+        source=olson_txt,
+        target=tzdata_bin)
+
+    bld.DYNAMIC_RESOURCES.append(tzdata_bin)
+
+    source_dirs = ['process_management',
+                   'process_state/**',
+                   'bt_test',
+                   'console',
+                   'debug',
+                   'flash_region',
+                   'graphics',
+                   'kernel/**',
+                   'launcher/**',
+                   'mfg',
+                   'popups/**',
+                   'resource',
+                   'syscall',
+                   'system',
+                   'shell',
+                   'shell/%s/**' % bld.env.NORMAL_SHELL,
+                   'util/**']
+
+    source_files = []
+    excludes = []
+
+    source_dirs.append('apps/core_apps/**')
+    if bld.env.NORMAL_SHELL == 'sdk':
+        source_dirs.append('apps/sdk/**')
+        source_dirs.append('apps/system_apps/timeline')
+        if bld.capability('HAS_SDK_SHELL4'):
+            source_dirs.append('apps/system_apps/launcher/default/**')
+        else:
+            excludes.append('process_management/app_custom_icon.c')
+            excludes.append('process_management/app_menu_data_source.c')
+    else:
+        source_dirs.extend(('apps/%s/**' % d for d in ('system_apps', 'watch')))
+        if bld.is_spalding():
+            excludes.append('apps/watch/tictoc/default')
+        else:
+            excludes.append('apps/watch/tictoc/spalding')
+
+        if bld.is_cutts():
+            excludes.append('apps/watch/kickstart')
+
+    source_dirs.extend(_get_mfg_paths(bld))
+    source_dirs.extend(_get_dbg_paths(bld))
+
+    if bld.env.BUILD_TEST_APPS:
+        source_dirs.append('apps/demo_apps/**')
+        if bld.is_tintin() or bld.is_silk():
+            excludes.append('apps/demo_apps/vibe_score_demo.c')
+    elif bld.env.PERFORMANCE_TESTS:
+        source_dirs.append('apps/demo_apps/gfx_tests')
+
+    excludes.extend(_get_launcher_globs_to_exclude(bld))
+
+    if not bld.capability('HAS_BUILTIN_HRM'):
+        excludes.append('popups/ble_hrm/**')
+
+    if bld.is_tintin():
+        excludes.append('apps/system_apps/health/**')
+        excludes.append('apps/system_apps/settings/settings_vibe_patterns.c')
+        excludes.append('apps/system_apps/weather/**')
+        excludes.append('apps/system_apps/workout/**')
+
+    sources = sum([bld.path.ant_glob('%s/*.c' % d, excl=excludes) for d in source_dirs], [])
+    sources.extend(bld.path.make_node(x) for x in source_files)
+    sources.extend(_get_comm_sources(bld, False))
+    sources.extend(bld.path.ant_glob('*.c'))
+    sources.extend(bld.path.ant_glob('*.[sS]'))
+
+    if bld.env.NORMAL_SHELL == 'sdk':
+        sources.append('apps/system_apps/app_fetch_ui.c')
+        if bld.capability('HAS_SDK_SHELL4'):
+            sources.append('apps/system_apps/watchfaces.c')
+
+    gettexts = []
+    gettexts.extend(sources)
+    gettexts.extend(bld.path.ant_glob('**/*.h'))
+    gettexts.extend(bld.path.ant_glob('**/*.def'))
+
+    bld.gettext(source=gettexts, target='fw.pot')
+    bld.msgcat(
+            source='fw.pot services/services.pot applib/applib.pot',
+            target='tintin.pot')
+
+    if bld.is_snowy_compatible() or bld.is_cutts() or bld.is_robert():
+        _gen_fpga_bitstream_header(bld)
+
+    if bld.is_snowy():
+        bld(features='binary_header',
+            source='../../platform/snowy/snowy_boot.fpga',
+            target='mfg/snowy/snowy_boot.fpga.auto.h',
+            array_name='s_boot_fpga')
+    elif bld.is_spalding():
+        bld(features='binary_header',
+            source='../../platform/snowy/spalding_boot.fpga',
+            target='mfg/spalding/spalding_boot.fpga.auto.h',
+            array_name='s_boot_fpga')
+
+    sources.append(bld.path.get_bld().make_node('pebble.auto.c'))
+    sources.append(bld.path.get_bld().make_node('resource/pfs_resource_table.auto.c'))
+    sources.append(bld.path.get_bld().make_node('resource/timeline_resource_table.auto.c'))
+    sources.append(bld.path.get_bld().make_node('builtin_resources.auto.c'))
+
+    if bld.env.DISABLE_PROMPT:
+        sources = [ x for x in sources if not x.abspath().endswith('console/prompt.c') ]
+        sources = [ x for x in sources if not x.abspath().endswith('console/prompt_commands.c') ]
+
+    _link_firmware(bld, sources)
+
+def build(bld):
+    # FIXME create applib_includes or something like that
+    bld(export_includes=['.',
+                         'applib/vendor/uPNG',
+                         'applib/vendor/tinflate'],
+        use=['stm32_stdlib',
+             'libbtutil_includes',
+             'libos_includes',
+             'libutil_includes',
+             'root_includes',
+             'idl_includes',
+             'nanopb_includes'],
+        name='fw_includes')
+
+    if bld.variant in ('applib', 'test_rocky_emx'):
+        bld.set_env(bld.all_envs['local'])
+        bld.env.DEFINES.extend(['UNITTEST', 'SCREEN_COLOR_DEPTH_BITS=8',
+                                'DISP_COLS=144', 'DISP_ROWS=168',
+                                'DISPLAY_FRAMEBUFFER_BYTES=%d' % (144 * 168),
+                                'PBL_COLOR', 'PBL_RECT'])
+        bld.recurse('applib')
+        return
+
+    # Truncate the commit to fit in our versions struct. This may cause an ambiguous commit
+    # hash, but it's better than killing the build because the commit doesn't fit.
+    git_rev = waftools.gitinfo.get_git_revision(bld)
+    git_rev['COMMIT'] = git_rev['COMMIT'][:7]
+    git_rev['PATCH_VERBOSE_STRING']
+    if len(git_rev['TAG']) > 31:
+        waflib.Logs.warn('Git tag {} is too long, truncating'.format(git_rev['TAG']))
+        git_rev['TAG'] = git_rev['TAG'][:31]
+
+    bld(features='subst',
+        source='git_version.auto.h.in',
+        target='git_version.auto.h',
+        **git_rev)
+
+    bld.recurse('startup')
+    bld.recurse('drivers')
+    bld.recurse('board')
+    bld.recurse('shell')
+    bld.recurse('vendor')
+    bld.recurse('services')
+    bld.recurse('applib')
+
+    # We can't use DMA until we root cause PBL-37278
+    if bld.is_silk():
+        bld.env.append_value('DEFINES', ['QSPI_DMA_DISABLE=1'])
+
+    if bld.variant == 'prf':
+        _build_recovery(bld)
+    else:
+        _build_normal(bld)
+
+# vim:filetype=python

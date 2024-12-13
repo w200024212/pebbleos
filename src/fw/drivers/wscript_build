@@ -1,0 +1,1156 @@
+mcu_family = bld.env.MICRO_FAMILY
+if mcu_family not in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.fatal('src/fw/drivers/wscript: '
+              'Unknown MICRO_FAMILY {}'.format(mcu_family))
+
+if bld.is_tintin():
+    bld(
+        name='drivers',
+        use=[
+            'driver_ambient_light',
+            'driver_backlight',
+            'driver_battery',
+            'driver_button',
+            'driver_clocksource',
+            'driver_display',
+            'driver_flash',
+            'driver_gpio_defaults',
+            'driver_hci_passthrough',
+            'driver_imu',
+            'driver_led_controller',
+            'driver_mcu',
+            'driver_mpu',
+            'driver_otp',
+            'driver_pwr',
+            'driver_rng',
+            'driver_rtc',
+            'driver_system_flash',
+            'driver_task_watchdog',
+            'driver_uart',
+            'driver_vibe',
+            'driver_voltage_monitor',
+            'driver_watchdog',
+        ],
+    )
+
+elif bld.is_silk():
+    bld(
+        name='drivers',
+        use=[
+            'driver_accessory',
+            'driver_ambient_light',
+            'driver_backlight',
+            'driver_battery',
+            'driver_button',
+            'driver_clocksource',
+            'driver_crc',
+            'driver_display',
+            'driver_flash',
+            'driver_gpio_defaults',
+            'driver_hci_passthrough',
+            'driver_hrm',
+            'driver_imu',
+            'driver_led_controller',
+            'driver_mcu',
+            'driver_mic',
+            'driver_mpu',
+            'driver_otp',
+            'driver_pmic',
+            'driver_pwr',
+            'driver_rng',
+            'driver_rtc',
+            'driver_system_flash',
+            'driver_task_watchdog',
+            'driver_temperature',
+            'driver_uart',
+            'driver_vibe',
+            'driver_voltage_monitor',
+            'driver_watchdog',
+        ],
+    )
+
+elif bld.is_snowy_compatible():
+    bld(
+        name='drivers',
+        use=[
+            'driver_accessory',
+            'driver_ambient_light',
+            'driver_backlight',
+            'driver_battery',
+            'driver_button',
+            'driver_clocksource',
+            'driver_display',
+            'driver_flash',
+            'driver_fpc_pinstrap',
+            'driver_gpio_defaults',
+            'driver_hci_passthrough',
+            'driver_imu',
+            'driver_led_controller',
+            'driver_mcu',
+            'driver_mic',
+            'driver_mpu',
+            'driver_otp',
+            'driver_pmic',
+            'driver_pwr',
+            'driver_rng',
+            'driver_rtc',
+            'driver_system_flash',
+            'driver_task_watchdog',
+            'driver_temperature',
+            'driver_touch',
+            'driver_uart',
+            'driver_vibe',
+            'driver_voltage_monitor',
+            'driver_watchdog',
+        ],
+    )
+
+elif bld.is_cutts():
+    bld(
+        name='drivers',
+        use=[
+            'driver_accessory',
+            'driver_ambient_light',
+            'driver_backlight',
+            'driver_battery',
+            'driver_button',
+            'driver_clocksource',
+            'driver_display',
+            'driver_flash',
+            'driver_gpio_defaults',
+            'driver_hci_passthrough',
+            'driver_imu',
+            'driver_led_controller',
+            'driver_mcu',
+            'driver_mic',
+            'driver_mpu',
+            'driver_otp',
+            'driver_pmic',
+            'driver_pwr',
+            'driver_rng',
+            'driver_rtc',
+            'driver_system_flash',
+            'driver_task_watchdog',
+            'driver_temperature',
+            'driver_touch',
+            'driver_uart',
+            'driver_vibe',
+            'driver_voltage_monitor',
+            'driver_watchdog',
+        ],
+    )
+
+elif bld.is_robert():
+    bld(
+        name='drivers',
+        use=[
+            'driver_accessory',
+            'driver_ambient_light',
+            'driver_backlight',
+            'driver_battery',
+            'driver_button',
+            'driver_clocksource',
+            'driver_display',
+            'driver_flash',
+            'driver_gpio_defaults',
+            'driver_hci_passthrough',
+            'driver_hrm',
+            'driver_imu',
+            'driver_led_controller',
+            'driver_mcu',
+            'driver_mic',
+            'driver_mpu',
+            'driver_otp',
+            'driver_pmic',
+            'driver_pwr',
+            'driver_rng',
+            'driver_rtc',
+            'driver_system_flash',
+            'driver_task_watchdog',
+            'driver_temperature',
+            'driver_uart',
+            'driver_vibe',
+            'driver_voltage_monitor',
+            'driver_watchdog',
+        ],
+    )
+
+## ----------
+
+if bld.is_snowy_compatible() or bld.is_silk() or bld.is_cutts() or bld.is_robert():
+    bld.objects(
+        name='driver_accessory',
+        source=[
+            'accessory.c',
+        ],
+        use=[
+            'driver_dma',
+            'driver_exti',
+            'driver_gpio',
+            'driver_periph_config',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_ambient_light',
+        source=[
+            'ambient_light.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_temperature',
+        source=[
+            'stm32f4/temperature.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+# FIXME: break dependency on driver_led_controller when not needed
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_backlight',
+        source=[
+            'backlight.c',
+        ],
+        use=[
+            'driver_pwm',
+            'driver_gpio',
+            'driver_led_controller',
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+
+if bld.env.QEMU:
+    bld.objects(
+        name='driver_battery',
+        source=[
+            'battery/battery_adc_conversion.c',
+            'battery/battery_common.c',
+            'qemu/qemu_battery.c',
+        ],
+        use=[
+            'driver_qemu_serial',
+            'driver_qemu_settings',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+elif bld.is_tintin():
+    bld.objects(
+        name='driver_battery',
+        source=[
+            'battery/battery_adc_conversion.c',
+            'battery/battery_common.c',
+            'battery/battery_tintin.c',
+        ],
+        use=[
+            'driver_exti',
+            'driver_gpio',
+            'driver_otp',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+else:
+    bld.objects(
+        name='driver_battery',
+        source=[
+            'battery/battery_adc_conversion.c',
+            'battery/battery_common.c',
+            'battery/battery_pmic.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_pmic',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if (bld.is_snowy_compatible() or bld.is_cutts() or bld.is_robert()) and not bld.env.QEMU:
+    bld.objects(
+        name='driver_bmi160',
+        source=[
+            'imu/bmi160/bmi160.c',
+            'imu/bmi160/bmi160_spi.c',
+        ],
+        use=[
+            'driver_exti',
+            'driver_rtc',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.is_silk() and not bld.env.QEMU:
+    bld.objects(
+        name='driver_bma255',
+        source=[
+            'imu/bma255/bma255.c',
+            'imu/bma255/bma255_spi.c',
+        ],
+        use=[
+            'driver_gpio',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_button',
+        source=[
+            'button.c',
+            'debounced_button.c',
+        ],
+        use=[
+            'driver_exti',
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_timer',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_clocksource',
+        source=[
+            'stm32f2/clocksource.c',
+        ],
+        use=[
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.is_tintin() or bld.is_silk():
+    bld.objects(
+        name='driver_display',
+        source=[
+            'display/sharp_ls013b7dh01/sharp_ls013b7dh01.c',
+        ],
+        use=[
+            'driver_dma',
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_spi',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+elif bld.is_snowy_compatible() or bld.is_cutts() or bld.is_robert():
+    bld.objects(
+        name='driver_display',
+        source=[
+            'display/ice40lp/ice40lp.c',
+            'display/ice40lp/ice40lp_internal.c',
+            'display/ice40lp/snowy_boot.c',
+        ],
+        use=[
+            'driver_dma',
+            'driver_exti',
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_pmic',
+            'driver_spi',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_dma',
+        source=[
+            'stm32f2/dma.c',
+        ],
+        use=[
+            'driver_periph_config',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_exti',
+        source=[
+            'stm32f2/exti.c',
+        ],
+        use=[
+            'driver_periph_config',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.is_tintin():
+    bld.objects(
+        name='driver_flash',
+        source=[
+            'flash/flash_crc.c',
+            'flash/micron_n25q/cd_flash_driver.c',
+            'flash/micron_n25q/flash.c',
+            'flash/micron_n25q/flash_core.c',
+        ],
+        use=[
+            'driver_dma',
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_spi',
+            'driver_watchdog',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+elif bld.is_silk():
+    bld.objects(
+        name='driver_flash',
+        source=[
+            'flash/cd_flash_driver.c',
+            'flash/flash_api.c',
+            'flash/flash_crc.c',
+            'flash/flash_erase.c',
+            'flash/mx25u.c',
+            'flash/nvram_bkp.c',
+            'flash/qspi_flash.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_qspi',
+            'driver_task_watchdog',
+            'driver_watchdog',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+elif bld.is_cutts() or bld.is_robert():
+    bld.objects(
+        name='driver_flash',
+        source=[
+            'flash/cd_flash_driver.c',
+            'flash/flash_api.c',
+            'flash/flash_crc.c',
+            'flash/flash_erase.c',
+            'flash/mt25q.c',
+            'flash/nvram_bkp.c',
+            'flash/qspi_flash.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_qspi',
+            'driver_task_watchdog',
+            'driver_watchdog',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+elif bld.is_snowy_compatible():
+    bld.objects(
+        name='driver_flash',
+        source=[
+            'flash/cd_flash_driver.c',
+            'flash/flash_api.c',
+            'flash/flash_crc.c',
+            'flash/flash_erase.c',
+            'flash/nvram_bkp.c',
+            'flash/spansion_s29vs.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_task_watchdog',
+            'driver_watchdog',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.is_snowy_compatible():
+    bld.objects(
+        name='driver_fpc_pinstrap',
+        source=[
+            'fpc_pinstrap/fpc_pinstrap_snowy.c',
+        ],
+        use=[
+            'driver_gpio',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_gpio',
+        source=[
+            'stm32f2/gpio.c',
+        ],
+        use=[
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+
+if mcu_family == 'STM32F7':
+    bld.objects(
+        name='driver_pwr',
+        source=[
+            'stm32f7/pwr.c',
+        ],
+        use=[
+            'fw_includes',
+        ],
+    )
+elif mcu_family == 'STM32F4':
+    bld.objects(
+        name='driver_pwr',
+        source=[
+            'stm32f4/pwr.c',
+        ],
+        use=[
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+else:
+    bld.objects(
+        name='driver_pwr',
+        source=[
+            'stm32f2/pwr.c',
+        ],
+        use=[
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+
+# FIXME: More of a board config than driver
+if mcu_family == 'STM32F2':
+    bld.objects(
+        name='driver_gpio_defaults',
+        source=[
+            'stm32f2/gpio_defaults.c',
+        ],
+        use=[
+            'driver_gpio',
+        ],
+    )
+elif mcu_family in ('STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_gpio_defaults',
+        source=[
+            'stm32f4/gpio_defaults.c',
+        ],
+        use=[
+            'driver_gpio',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4'):
+    bld.objects(
+        name='driver_i2c',
+        source=[
+            'i2c.c',
+            'stm32f2/i2c_hal.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_rtc',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+elif mcu_family in ('STM32F7',):
+    bld.objects(
+        name='driver_i2c',
+        source=[
+            'i2c.c',
+            'stm32f7/i2c_hal.c',
+            'stm32f7/i2c_timingr.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_rtc',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.env.QEMU:
+    mag_driver = ('driver_mag3110' if bld.capability('HAS_MAGNETOMETER')
+                  else 'driver_mag_null')
+    bld.objects(
+        name='driver_imu',
+        source=[
+            'imu/imu_qemu.c',
+            'qemu/qemu_accel.c',
+        ],
+        use=[
+            mag_driver,
+            'driver_qemu_serial',
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+elif bld.is_tintin():
+    bld.objects(
+        name='driver_imu',
+        source=[
+            'imu/imu_tintin.c',
+        ],
+        use=[
+            'driver_lis3dh',
+            'driver_mag3110',
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+elif bld.is_snowy_compatible() or bld.is_cutts() or bld.is_robert():
+    bld.objects(
+        name='driver_imu',
+        source=[
+            'imu/imu_snowy_evt2.c',
+        ],
+        use=[
+            'driver_bmi160',
+            'driver_mag3110',
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+elif bld.is_silk():
+    bld.objects(
+        name='driver_imu',
+        source=[
+            'imu/imu_silk.c',
+        ],
+        use=[
+            'driver_bma255',
+            'driver_mag_null',
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+
+if bld.env.BOARD == "v2_0":
+    bld.objects(
+        name='driver_led_controller',
+        source=[
+            'led_controller.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_i2c',
+            'driver_periph_config',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.is_tintin() and not bld.env.QEMU:
+    bld.objects(
+        name='driver_lis3dh',
+        source=[
+            'imu/lis3dh/config.c',
+            'imu/lis3dh/lis3dh.c',
+        ],
+        use=[
+            'driver_exti',
+            'driver_gpio',
+            'driver_i2c',
+            'driver_periph_config',
+            'driver_vibe',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.is_tintin() or bld.is_snowy_compatible() or bld.is_cutts() or bld.is_robert():
+    bld.objects(
+        name='driver_mag3110',
+        source=[
+            'imu/mag3110/mag3110.c',
+        ],
+        use=[
+            'driver_exti',
+            'driver_gpio',
+            'driver_i2c',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if not bld.capability('HAS_MAGNETOMETER'):
+    bld.objects(
+        name='driver_mag_null',
+        source=[
+            'imu/mag_null.c',
+        ],
+        use=[
+            'fw_includes',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_mcu',
+        source=[
+            'stm32f2/mcu.c',
+        ],
+        use=[
+            'freertos',
+        ],
+    )
+
+if bld.capability('HAS_MICROPHONE'):
+    bld.objects(
+        name='driver_mic',
+        source=[
+            'mic/mic_command.c',
+        ],
+        use=[
+            'driver_accessory',
+            'driver_dma',
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_pmic',
+            'fw_includes',
+            'root_includes',
+            'freertos',
+            'stm32_stdlib',
+        ],
+    )
+
+
+# FIXME: make generic to Cortex-M
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_mpu',
+        source=[
+            'mpu.c',
+        ],
+        use=[
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_otp',
+        source=[
+            'stm32f2/otp.c',
+        ],
+        use=[
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_periph_config',
+        source=[
+            'stm32f2/periph_config.c',
+        ],
+        use=[
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.is_snowy_compatible() or bld.is_cutts() or bld.is_robert():
+    bld.objects(
+        name='driver_pmic',
+        source=[
+            'pmic/max14690_pmic.c',
+        ],
+        use=[
+            'driver_exti',
+            'driver_gpio',
+            'driver_i2c',
+            'driver_periph_config',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+elif bld.is_silk():
+    bld.objects(
+        name='driver_pmic',
+        source=[
+            'pmic/as3701b.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_i2c',
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+
+if bld.env.QEMU:
+    bld.objects(
+        name='driver_qemu_serial',
+        source=[
+            'qemu/qemu_serial.c',
+            'qemu/qemu_serial_util.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+            'root_includes',
+        ],
+    )
+
+if bld.env.QEMU:
+    bld.objects(
+        name='driver_qemu_settings',
+        source=[
+            'qemu/qemu_settings.c',
+        ],
+        use=[
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4'):
+    bld.objects(
+        name='driver_pwm',
+        source=[
+            'stm32f2/pwm.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ]
+    )
+elif mcu_family in ('STM32F7',):
+    bld.objects(
+        name='driver_pwm',
+        source=[
+            'stm32f7/pwm.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ]
+    )
+
+if 'STM32F412xG' in bld.env.DEFINES or mcu_family in ('STM32F7',):
+    bld.objects(
+        name='driver_qspi',
+        source=[
+            'stm32f412/qspi.c',
+        ],
+        use=[
+            'driver_dma',
+            'driver_periph_config',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if 'STM32F412xG' in bld.env.DEFINES:
+    bld.objects(
+        name='driver_voltage_monitor',
+        source=[
+            'stm32f412/voltage_monitor.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ]
+    )
+elif mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_voltage_monitor',
+        source=[
+            'stm32f2/voltage_monitor.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ]
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_rng',
+        source=[
+            'stm32f2/rng.c',
+        ],
+        use=[
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family == 'STM32F2':
+    bld.objects(
+        name='driver_rtc',
+        source=[
+            'rtc_common.c',
+            'stm32f2/rtc.c',
+            'stm32f2/rtc_calibration.c',
+        ],
+        use=[
+            'driver_clocksource',
+            'driver_gpio',
+            'driver_pwr',
+            'driver_periph_config',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+elif mcu_family in ('STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_rtc',
+        source=[
+            'rtc_common.c',
+            'stm32f4/rtc.c',
+        ],
+        use=[
+            'driver_pwr',
+            'driver_clocksource',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_spi',
+        source=[
+            'stm32f2/spi.c',
+            'stm32f2/spi_legacy.c'
+        ],
+        use=[
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family == 'STM32F7':
+    bld.objects(
+        name='driver_spi',
+        source=[
+            'stm32f2/spi.c',
+        ],
+        use=[
+            'fw_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_system_flash',
+        source=[
+            'stm32f2/system_flash.c',
+        ],
+        use=[
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+# FIXME: not really a driver
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_task_watchdog',
+        source=[
+            'task_watchdog.c',
+        ],
+        use=[
+            'driver_periph_config',
+            'driver_watchdog',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_timer',
+        source=[
+            'stm32f2/timer.c',
+        ],
+        use=[
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if bld.is_cutts():
+    if bld.env.QEMU:
+        bld.objects(
+            name='driver_touch',
+            source=[
+                'qemu/qemu_touch.c',
+            ],
+        )
+    else:
+        bld.objects(
+            name='driver_touch',
+            source=bld.path.ant_glob('touch/ewd1000/*.c'),
+            use=[
+                'freertos',
+                'fw_includes',
+                'root_includes',
+            ],
+        )
+
+if mcu_family in ('STM32F2', 'STM32F4'):
+    bld.objects(
+        name='driver_uart',
+        source=[
+            'stm32f2/uart.c',
+        ],
+        use=[
+            'driver_gpio',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+elif mcu_family == 'STM32F7':
+    bld.objects(
+        name='driver_uart',
+        source=[
+            'stm32f7/uart.c',
+        ],
+        use=[
+            'driver_gpio',
+            'freertos',
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_vibe',
+        source=[
+            'vibe.c',
+        ],
+        use=[
+            'driver_gpio',
+            'driver_periph_config',
+            'driver_pwm'
+            'freertos',
+            'fw_includes',
+            'root_includes',
+        ],
+    )
+
+if mcu_family in ('STM32F2', 'STM32F4', 'STM32F7'):
+    bld.objects(
+        name='driver_watchdog',
+        source=[
+            'stm32f2/watchdog.c',
+        ],
+        use=[
+            'fw_includes',
+            'root_includes',
+            'stm32_stdlib',
+        ],
+    )
+
+# vim:filetype=python

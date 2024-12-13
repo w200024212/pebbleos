@@ -1,0 +1,56 @@
+// Copyright 2024 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+/**
+These schemas define entities that are reused in multiple places in other
+message schemas such as users, locations, and devices
+*/
+
+syntax = "proto2";
+
+package pebble.pipeline;
+
+option java_package="com.getpebble.pipeline";
+
+message Version {
+  required uint32 major = 4;
+  required uint32 minor = 5;
+  optional string patch = 6;
+}
+
+message LocationInfo {
+  message LatLon {
+    required float lat = 1;
+    required float lon = 2;
+  }
+  optional LatLon geo = 1;
+  optional string ip_address = 2;
+  optional string location_str = 3;
+}
+
+/**
+Tiers refer to any system that might receive or send data along the pipeline
+such as watches and phones
+*/
+message Tier {
+  required string type = 1;
+  required string id = 2; /// ID string for the device or system, which may or may not conform to a true UUID. eg serial_number for a pebble watch
+  optional LocationInfo location = 3;
+  optional string comment = 4;
+  optional Version version = 5;
+}
+
+message User {
+  required string id = 1;
+}

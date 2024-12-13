@@ -1,0 +1,77 @@
+/*
+ * Copyright 2024 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "protobuf_log_hr.h"
+#include "protobuf_log.h"
+
+#include "services/common/hrm/hrm_manager.h"
+
+#include "nanopb/measurements.pb.h"
+#include "system/passert.h"
+
+#include <util/size.h>
+
+#include <stdint.h>
+#include <stdbool.h>
+
+// -----------------------------------------------------------------------------------------
+// Convert HRMQuality to the internal protobuf representation.
+T_STATIC uint32_t prv_hr_quality_int(HRMQuality quality) {
+  switch (quality) {
+    case HRMQuality_NoAccel:
+      return pebble_pipeline_MeasurementSet_HeartRateQuality_NoAccel;
+    case HRMQuality_OffWrist:
+      return pebble_pipeline_MeasurementSet_HeartRateQuality_OffWrist;
+    case HRMQuality_NoSignal:
+      return pebble_pipeline_MeasurementSet_HeartRateQuality_NoSignal;
+    case HRMQuality_Worst:
+      return pebble_pipeline_MeasurementSet_HeartRateQuality_Worst;
+    case HRMQuality_Poor:
+      return pebble_pipeline_MeasurementSet_HeartRateQuality_Poor;
+    case HRMQuality_Acceptable:
+      return pebble_pipeline_MeasurementSet_HeartRateQuality_Acceptable;
+    case HRMQuality_Good:
+      return pebble_pipeline_MeasurementSet_HeartRateQuality_Good;
+    case HRMQuality_Excellent:
+      return pebble_pipeline_MeasurementSet_HeartRateQuality_Excellent;
+  }
+  WTF;    // Should never get here
+  return 0;
+}
+
+ProtobufLogRef protobuf_log_hr_create(ProtobufLogTransportCB transport) {
+  // Create a measure log session, which we use to send heart rate readings to the phone
+  ProtobufLogMeasurementType measure_types[] = {
+    ProtobufLogMeasurementType_BPM,
+    ProtobufLogMeasurementType_HRQuality,
+  };
+
+  ProtobufLogConfig log_config = {
+    .type = ProtobufLogType_Measurements,
+    .measurements = {
+      .types = measure_types,
+      .num_types = ARRAY_LENGTH(measure_types),
+    },
+  };
+
+  return protobuf_log_create(&log_config, transport, 0 /*max_encoded_msg_size*/);
+}
+
+bool protobuf_log_hr_add_sample(ProtobufLogRef ref, time_t sample_utc, uint8_t bpm,
+                                HRMQuality quality) {
+  uint32_t values[] = {bpm, prv_hr_quality_int(quality)};
+  return protobuf_log_session_add_measurements(ref, sample_utc, ARRAY_LENGTH(values), values);
+}

@@ -1,0 +1,133 @@
+/*
+ * Copyright 2024 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#pragma once
+
+// ----------------------------------------------
+//  Board definitions for Robert EVT
+// ----------------------------------------------
+//
+
+#include "util/size.h"
+
+#define BOARD_LSE_MODE RCC_LSE_Bypass
+
+static const BoardConfigButton BOARD_CONFIG_BUTTON = {
+  .buttons = {
+    [BUTTON_ID_BACK] = {
+      .input = {
+        .gpio = GPIOG,
+        .gpio_pin = GPIO_Pin_3,
+      },
+      .pupd = GPIO_PuPd_NOPULL,
+    },
+    [BUTTON_ID_UP] = {
+      .input = {
+        .gpio = GPIOG,
+        .gpio_pin = GPIO_Pin_4,
+      },
+      .pupd = GPIO_PuPd_UP,
+    },
+    [BUTTON_ID_SELECT] = {
+      .input = {
+        .gpio = GPIOG,
+        .gpio_pin = GPIO_Pin_5,
+      },
+      .pupd = GPIO_PuPd_UP,
+    },
+    [BUTTON_ID_DOWN] = {
+      .input = {
+        .gpio = GPIOG,
+        .gpio_pin = GPIO_Pin_6,
+      },
+      .pupd = GPIO_PuPd_UP,
+    },
+  },
+};
+
+static const BoardConfigPower BOARD_CONFIG_POWER = {
+  .rail_4V5_ctrl = {
+    .gpio = GPIOH,
+    .gpio_pin = GPIO_Pin_5,
+    .active_high = true,
+  },
+
+  .rail_6V6_ctrl = { GPIO_Port_NULL },
+};
+
+static const BoardConfigFlash BOARD_CONFIG_FLASH = {
+  .reset_gpio = {
+    .gpio = GPIOE,
+    .gpio_pin = GPIO_Pin_15,
+    .active_high = false,
+  },
+};
+
+static const BoardConfigAccessory BOARD_CONFIG_ACCESSORY = {
+  .power_en = { GPIOD, GPIO_Pin_2, true },
+};
+
+typedef enum {
+  QSpiPin_CS,
+  QSpiPin_SCLK,
+  QSpiPin_DQ0,
+  QSpiPin_DQ1,
+  QSpiPin_DQ2,
+  QSpiPin_DQ3,
+  QSpiPinCount,
+} QSpiPin;
+
+static const AfConfig BOARD_CONFIG_FLASH_PINS[] = {
+  [QSpiPin_CS] = {
+    .gpio = GPIOB,
+    .gpio_pin = GPIO_Pin_10,
+    .gpio_pin_source = GPIO_PinSource10,
+    .gpio_af = GPIO_AF9_QUADSPI,
+  },
+  [QSpiPin_SCLK] = {
+    .gpio = GPIOF,
+    .gpio_pin = GPIO_Pin_10,
+    .gpio_pin_source = GPIO_PinSource10,
+    .gpio_af = GPIO_AF9_QUADSPI,
+  },
+  [QSpiPin_DQ0] = {
+    .gpio = GPIOD,
+    .gpio_pin = GPIO_Pin_11,
+    .gpio_pin_source = GPIO_PinSource11,
+    .gpio_af = GPIO_AF9_QUADSPI,
+  },
+  [QSpiPin_DQ1] = {
+    .gpio = GPIOC,
+    .gpio_pin = GPIO_Pin_10,
+    .gpio_pin_source = GPIO_PinSource10,
+    .gpio_af = GPIO_AF9_QUADSPI,
+  },
+  [QSpiPin_DQ2] = {
+    .gpio = GPIOE,
+    .gpio_pin = GPIO_Pin_2,
+    .gpio_pin_source = GPIO_PinSource2,
+    .gpio_af = GPIO_AF9_QUADSPI,
+  },
+  [QSpiPin_DQ3] = {
+    .gpio = GPIOA,
+    .gpio_pin = GPIO_Pin_1,
+    .gpio_pin_source = GPIO_PinSource1,
+    .gpio_af = GPIO_AF9_QUADSPI,
+  },
+};
+
+extern I2CSlavePort * const I2C_MAX14690;
+extern ICE40LPDevice * const ICE40LP;

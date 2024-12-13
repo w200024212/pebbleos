@@ -1,0 +1,53 @@
+import os
+import sh
+from waflib import Logs
+
+
+def build(bld):
+    qemu_spi_cooker_env = bld.all_envs['32bit'].derive()
+    output = bld.path.get_bld().parent.parent.make_node('qemu_spi_cooker')
+
+    sources = ["../../src/fw/services/normal/filesystem/flash_translation.c",
+               "../../src/fw/services/normal/filesystem/pfs.c",
+               "../../src/fw/flash_region/filesystem_regions.c",
+               "../../tests/fakes/fake_rtc.c",
+               "../../tests/fakes/fake_spi_flash.c",
+               "../../tests/stubs/stubs_clar.c",
+               "../../src/libutil/list.c",
+               "../../src/fw/util/crc8.c",
+               "../../src/fw/util/util_platform.c",
+               "../../src/fw/util/legacy_checksum.c"]
+
+    sources = [bld.path.find_node(s) for s in sources]
+    sources.extend(bld.path.ant_glob('src/*.c'))
+
+    includes = ["../clar",
+                "../../tests/stubs",
+                "../../tests/fakes",
+                "../../tests/test_includes",
+                "../../tests/overrides/default/",
+                "../../src/include",
+                "../../src/fw",
+                "../../src/libos/include",
+                "../../src/libutil/includes",
+                "../../src/fw/util/time",
+                "../../src/fw/vendor/FreeRTOS/Source/include",
+                "../../src/fw/vendor/FreeRTOS/Source/portable/GCC/ARM_CM3_PEBBLE"]
+
+    includes = [bld.path.find_node(i).abspath() for i in includes]
+
+    # # time_t is defined in sys/types in newlib, and time.h on recent Linux
+    # # so just force the defined type for testing time
+    # qemu_spi_cooker_env.CFLAGS.append('-Dtime_t=__SYSCALL_SLONG_TYPE')
+
+    platform_define = "PLATFORM_%s" % bld.get_platform_name().upper()
+
+    bld.program(source=sources,
+                target=output,
+                includes=includes,
+                defines=['UNITTEST', 'DUMA_DISABLED', 'PBL_COLOR', 'PBL_RECT', platform_define],
+                cflags='-Wno-format-security',
+                env=qemu_spi_cooker_env)
+
+
+# vim:filetype=python

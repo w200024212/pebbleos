@@ -1,0 +1,914 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 5.0\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Name: Nederlands\n"
+"X-Generator: POEditor.com\n"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:45
+msgid "Jan"
+msgstr "jan"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:45
+msgid "Feb"
+msgstr "feb"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:45
+msgid "Mar"
+msgstr "mrt"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:45
+msgid "Apr"
+msgstr "apr"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:45
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:50
+msgid "May"
+msgstr "mei"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:46
+msgid "Jun"
+msgstr "jun"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:46
+msgid "Jul"
+msgstr "jul"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:46
+msgid "Aug"
+msgstr "aug"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:46
+msgid "Sep"
+msgstr "sep"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:46
+msgid "Oct"
+msgstr "okt"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:47
+msgid "Nov"
+msgstr "nov"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:47
+msgid "Dec"
+msgstr "dec"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:49
+msgid "January"
+msgstr "januari"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:49
+msgid "February"
+msgstr "februari"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:49
+msgid "March"
+msgstr "maart"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:49
+msgid "April"
+msgstr "april"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:50
+msgid "June"
+msgstr "juni"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:50
+msgid "July"
+msgstr "juli"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:50
+msgid "August"
+msgstr "augustus"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:51
+msgid "September"
+msgstr "september"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:51
+msgid "October"
+msgstr "oktober"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:51
+msgid "November"
+msgstr "november"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:51
+msgid "December"
+msgstr "december"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:53
+msgid "Sun"
+msgstr "zo"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:53
+msgid "Mon"
+msgstr "ma"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:53
+msgid "Tue"
+msgstr "di"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:53
+msgid "Wed"
+msgstr "wo"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:54
+msgid "Thu"
+msgstr "do"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:54
+msgid "Fri"
+msgstr "vr"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:54
+msgid "Sat"
+msgstr "za"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:56
+msgid "Sunday"
+msgstr "zondag"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:56
+msgid "Monday"
+msgstr "maandag"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:56
+msgid "Tuesday"
+msgstr "dinsdag"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:56
+msgid "Wednesday"
+msgstr "woensdag"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:57
+msgid "Thursday"
+msgstr "donderdag"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:57
+msgid "Friday"
+msgstr "vrijdag"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:57
+msgid "Saturday"
+msgstr "zaterdag"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:61
+msgid "%H:%M:%S"
+msgstr "%H:%M:%S"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:70
+msgid "%m/%d/%y"
+msgstr "%d/%m/%y"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:75
+msgid "%a %b %e %H:%M:%S %Y"
+msgstr "%a %b %e %H:%M:%S %Y"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:81
+msgid "%a %b %e %H:%M:%S %Z %Y"
+msgstr "%a %b %e %H:%M:%S %Z %Y"
+
+#: /Users/francois/Work/tintin/src/fw/applib/pbl_std/timelocal.c:94
+msgid "md"
+msgstr "dm"
+
+#: /Users/francois/Work/tintin/src/fw/applib/ui/date_time_window.c:171
+msgid "Year"
+msgstr "Jaar"
+
+#: /Users/francois/Work/tintin/src/fw/applib/ui/date_time_window.c:181
+msgid "Month"
+msgstr "Maand"
+
+#: /Users/francois/Work/tintin/src/fw/applib/ui/date_time_window.c:195
+msgid "Day"
+msgstr "Dag"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarm_detail.c:81
+msgid "Enable"
+msgstr "Inschakelen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarm_detail.c:81
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:63
+msgid "Disable"
+msgstr "Uitschakelen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarm_detail.c:85
+msgid "Edit"
+msgstr "Wijzigen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarm_detail.c:89
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarm_editor.c:69
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarms.c:224
+msgid "New Alarm"
+msgstr "Nieuwe wekker"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarm_editor.c:69
+msgid "Edit Alarm"
+msgstr "Wekker wijzigen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarms.c:226
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarms.c:341
+msgid "Snooze Delay"
+msgstr "Snoozetijd"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarms.c:256
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:68
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:79
+msgid "ON"
+msgstr "AAN"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarms.c:256
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:73
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:81
+msgid "OFF"
+msgstr "UIT"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarms.c:265
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:199
+msgid "Options"
+msgstr "Opties"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarms.c:380
+msgid "Alarms"
+msgstr "Wekker"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/fw_update/fw_update.c:124
+msgid "Updating..."
+msgstr "Installeren..."
+
+#: /Users/francois/Work/tintin/src/fw/apps/core_apps/fw_update/fw_update.c:172
+msgid "Firmware Update"
+msgstr "Firmware-update"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/getting_started/getting_started.c:124
+msgid "Cancel Update?"
+msgstr "Update annuleren?"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/getting_started/getting_started.c:125
+msgid ""
+"Cancel\n"
+"Update?"
+msgstr ""
+"Update\n"
+"annuleren?"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/getting_started/getting_started.c:196
+msgid "Install Pebble App"
+msgstr "Installeer Pebble-app"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/getting_started/getting_started.c:312
+msgid "Getting Started"
+msgstr "Aan de slag"
+
+#: /Users/francois/Work/tintin/src/fw/popups/phone_ui.c:374
+msgid "Disconnected"
+msgstr "Niet verbonden"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/golf.c:199
+msgid "Hole"
+msgstr "Hole"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/golf.c:221
+msgid "Par"
+msgstr "Par"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/golf.c:333
+msgid "Golf"
+msgstr "Golf"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/music_app.c:286
+msgid "No Phone Connection"
+msgstr "Geen verbinding"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/music_app.c:296
+msgid "No Music Found"
+msgstr "Geen muziek"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/music_app.c:504
+msgid "Music"
+msgstr "Muziek"
+
+#. Maybe remove the period ('.') in English?
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/notifications.c:379
+msgid "No notifications."
+msgstr "Geen notificaties"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/notifications.c:510
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:96
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:193
+msgid "Notifications"
+msgstr "Notificaties"
+
+#: /Users/francois/Work/tintin/src/fw/apps/core_apps/panic_window_app.c:111
+msgid "Panic App"
+msgstr "Panic App"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:94
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:336
+msgid "Bluetooth"
+msgstr "Bluetooth"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:98
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_activity_tracker.c:113
+msgid "Activity"
+msgstr "Activiteit"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:100
+msgid "Quick Launch"
+msgstr "Snelkoppeling"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:102
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:83
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:223
+msgid "Date & Time"
+msgstr "Datum en tijd"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:104
+msgid "Display"
+msgstr "Scherm"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:106
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:97
+msgid "About"
+msgstr "Over"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:111
+msgid "Shut Down"
+msgstr "Uitschakelen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:114
+msgid "Factory Reset"
+msgstr "Herstel"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings.c:244
+msgid "Settings"
+msgstr "Instellingen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:37
+msgid "BT Address"
+msgstr "Bluetooth-adres"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:38
+msgid "Firmware"
+msgstr "Firmware"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:40
+msgid "Recovery"
+msgstr "Systeemherstel"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:41
+msgid "Bootloader"
+msgstr "Bootloader"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:42
+msgid "Hardware"
+msgstr "Hardware"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:43
+msgid "Serial"
+msgstr "Serienummer"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:44
+msgid "Uptime"
+msgstr "Uptime"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:45
+msgid "Legal"
+msgstr "Juridisch"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_activity_tracker.c:101
+msgid "Activity Tracker"
+msgstr "Activiteitsmeter"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_activity_tracker.c:143
+msgid "No Activity Trackers are installed"
+msgstr "Geen activiteitsmeters geïnstalleerd"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:86
+msgid "Now Discoverable"
+msgstr "Nu detecteerbaar"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:160
+msgid "<Unknown>"
+msgstr "<Niet bekend>"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:232
+msgid "Pairing Instructions"
+msgstr "Koppelinstructies"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:235
+msgid "%u Paired Phone%c"
+msgstr "%u telefoon%c gekoppeld"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:301
+msgid "No LE"
+msgstr "Geen LE"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:301
+msgid "LE Only"
+msgstr "Alleen LE"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:313
+msgid "Connected"
+msgstr "Verbonden"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:327
+msgid "Bluetooth OFF"
+msgstr "Bluetooth uit"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:328
+msgid "Airplane Mode"
+msgstr "Vliegtuigmodus"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:331
+msgid "Bluetooth ON"
+msgstr "Bluetooth aan"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:337
+msgid "Disabling..."
+msgstr "Uitschakelen..."
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:337
+msgid "Enabling..."
+msgstr "Inschakelen..."
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:355
+msgid "Disable Airplane Mode to connect"
+msgstr "Schakel vliegtuigmodus uit om te verbinden"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_bluetooth.c:357
+msgid "Open the Pebble app on your phone to connect"
+msgstr "Open Pebble-app op telefoon om te verbinden"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:217
+msgid "Clear all notification history?"
+msgstr "Notificatie geschiedenis wissen?"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:66
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:97
+msgid "Backlight"
+msgstr "Licht"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:70
+msgid "Auto"
+msgstr "Auto"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:71
+msgid "Ambient Controlled"
+msgstr "Pas automatisch aan"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:76
+msgid "Motion"
+msgstr "Beweging"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:77
+msgid "Shake to light"
+msgstr "Schud voor licht"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_factory_reset.c:78
+msgid "Reset to factory settings?"
+msgstr "Instellingen herstellen?"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_factory_reset.c:84
+msgid ""
+"Remember to also forget your Pebble's Bluetooth connection from your mobile "
+"device"
+msgstr ""
+"Denk eraan, \"vergeet\" je Pebble's Bluetooth koppeling ook vanaf je telefoon"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:118
+msgid "Notifications On"
+msgstr "Notificaties aan"
+
+#. I wasn't able to reach this.
+#. Is this still used?
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:121
+msgid "Texts Only"
+msgstr "Alleen SMS"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:124
+msgid "Phone Calls Only"
+msgstr "Alleen oproepen"
+
+#. Wasn't able to reach this. Is this still used?
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:127
+msgid "Apps Only"
+msgstr "Alleen apps"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:130
+msgid "Notifications Off"
+msgstr "Notificaties uit"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:135
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:172
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch.c:147
+msgid "Enabled"
+msgstr "Ingeschakeld"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:138
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:174
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch.c:147
+msgid "Disabled"
+msgstr "Uitgeschakeld"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:152
+msgid "Set Schedule"
+msgstr "Tijd instellen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:155
+msgid "Font Size"
+msgstr "Lettergrootte"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:158
+msgid "Small"
+msgstr "Klein"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:161
+msgid "Large"
+msgstr "Groot"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:168
+msgid "Vibration"
+msgstr "Trillen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:170
+msgid "Disabled (Plugged In)"
+msgstr "Uit (aan de lader)"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:177
+msgid "Clear History"
+msgstr "Wis geschiedenis"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:196
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_notifications.c:319
+msgid "Do Not Disturb"
+msgstr "Niet storen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch.c:109
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_app_menu.c:70
+msgid "Select an App"
+msgstr "Selecteer app"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch.c:152
+msgid "Set App"
+msgstr "App instellen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch.c:175
+msgid "Up Button"
+msgstr "Omhoog-knop"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch.c:178
+msgid "Down Button"
+msgstr "Omlaag-knop"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:60
+msgid "Set Now"
+msgstr "Nu Instellen"
+
+#. Too little room here for a "literal" translation.
+#. Changed this to say "Quick Launch" in Dutch.
+#. In the context of this screen it made sense to me.
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:129
+msgid "UP shortcut set"
+msgstr "Snelkoppeling"
+
+#. Too little room here for a "literal" translation.
+#. Changed this to say "Quick Launch" in Dutch.
+#. In the context of this screen it made sense to me.
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:129
+msgid "DOWN shortcut set"
+msgstr "Snelkoppeling"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:164
+msgid "UP shortcut disabled"
+msgstr "Snelkoppeling voor \"omhoog\" uit"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:164
+msgid "DOWN shortcut disabled"
+msgstr "Snelkoppeling voor \"omlaag\" uit"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:177
+msgid "This shortcut can be enabled from the settings menu"
+msgstr "Stel snelkoppeling in vanuit \"Instellingen\""
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:190
+msgid "Shortcut not set"
+msgstr "Geen snelkoppeling"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:201
+msgid "Would you like to set the UP shortcut?"
+msgstr "Omhoog-knop instellen?"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:202
+msgid "Would you like to set the DOWN shortcut?"
+msgstr "Omlaag-knop instellen?"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:224
+msgid "Long press %s from any watchface to open %s"
+msgstr "Druk %s lang in om vanuit wijzerplaat %s te openen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:225
+msgid "UP"
+msgstr "OMHOOG"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_quick_launch_setup_menu.c:226
+msgid "DOWN"
+msgstr "OMLAAG"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_remote.c:96
+msgid "Forget"
+msgstr "Vergeet"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_remote.c:114
+msgid ""
+"Remember to also forget your Pebble's Bluetooth connection from your phone"
+msgstr ""
+"Denk eraan, \"vergeet\" je Pebble's Bluetooth koppeling ook vanaf je telefoon"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:50
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:186
+msgid "Set Time"
+msgstr "Tijd instellen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:57
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:190
+msgid "Set Date"
+msgstr "Datum instellen"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:67
+msgid "Time Display"
+msgstr "Tijdweergave"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:69
+msgid "24h"
+msgstr "24 uur"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_time.c:69
+msgid "12h"
+msgstr "12 uur"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:69
+msgid "mi/h"
+msgstr "mi/h"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:69
+msgid "km/h"
+msgstr "km/h"
+
+#. the font in the Sports UI doesn't contain the "j" and "l" that are used in the Dutch translateion.
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:70
+msgid "min/mi"
+msgstr "min/mi"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:70
+msgid "min/km"
+msgstr "min/km"
+
+#. "mijl" doesn't fit.
+#. Changed back to "mi"
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:73
+msgid "mi"
+msgstr "mi"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:73
+msgid "km"
+msgstr "km"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:144
+msgid "PACE"
+msgstr "TEMPO"
+
+#. Doesn't fit.
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:144
+msgid "SPEED"
+msgstr "SNELHEID"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/sports.c:353
+msgid "Sports"
+msgstr "Sport"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/watchfaces.c:64
+msgid "Selected"
+msgstr "Geselecteerd"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/watchfaces.c:154
+msgid "Watchfaces"
+msgstr "Wijzerplaten"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/welcome_ui_app.c:59
+msgid "You just updated your Pebble to version %s!"
+msgstr "Je hebt je Pebble bijgewerkt naar versie %s!"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/welcome_ui_app.c:70
+msgid "Your Pebble is up to date!"
+msgstr "Je Pebble is up-to-date!"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/welcome_ui_app.c:117
+msgid "Welcome!"
+msgstr "Welkom!"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/welcome_ui_app.c:144
+msgid "Welcome UI"
+msgstr "Welkom"
+
+#: /Users/francois/Work/tintin/src/fw/apps/watch/simplicity/simplicity.c:35
+msgid "%B %e"
+msgstr "%e %B"
+
+#: /Users/francois/Work/tintin/src/fw/apps/watch/simplicity/simplicity.c:112
+msgid "Simplicity"
+msgstr "Simplicity"
+
+#: /Users/francois/Work/tintin/src/fw/popups/battery_warning.c:26
+msgid "Last Warning"
+msgstr "Laatste waarschuwing"
+
+#: /Users/francois/Work/tintin/src/fw/popups/battery_warning.c:28
+msgid "%d%% remaining"
+msgstr "%d%% resterend"
+
+#: /Users/francois/Work/tintin/src/fw/popups/battery_warning.c:42
+msgid "Battery Low"
+msgstr "Batterij leeg"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_layer.c:189
+msgid "Just now"
+msgstr "Zojuist"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_layer.c:191
+msgid "A minute ago"
+msgstr "Een minuut geleden"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_layer.c:195
+msgid "An hour ago"
+msgstr "Een uur geleden"
+
+#: /Users/francois/Work/tintin/src/fw/popups/phone.c:149
+msgid "Unknown"
+msgstr "Onbekend"
+
+#: /Users/francois/Work/tintin/src/fw/popups/phone.c:211
+msgid "No Caller ID"
+msgstr "Onbekend nummer"
+
+#: /Users/francois/Work/tintin/src/fw/popups/phone_ui.c:147
+msgid "Declining Call"
+msgstr "Weigeren..."
+
+#: /Users/francois/Work/tintin/src/fw/popups/phone.c:272
+msgid "Canceling Call"
+msgstr "Annuleren..."
+
+#. Text boxes overlap
+#. https://pebbletechnology.atlassian.net/browse/PBL-11355
+#: /Users/francois/Work/tintin/src/fw/popups/phone_ui.c:145
+#: /Users/francois/Work/tintin/src/fw/popups/phone_ui.c:376
+msgid "Call Ended"
+msgstr "Gesprek beëindigd"
+
+#. Text boxes overlap
+#. https://pebbletechnology.atlassian.net/browse/PBL-11355
+#: /Users/francois/Work/tintin/src/fw/popups/phone_ui.c:306
+msgid "Incoming Call"
+msgstr "Inkomend gesprek"
+
+#: /Users/francois/Work/tintin/src/fw/popups/phone_ui.c:328
+msgid "Calling..."
+msgstr "Bellen..."
+
+#: /Users/francois/Work/tintin/src/fw/popups/phone_ui.c:343
+msgid "Missed Call"
+msgstr "Gemist gesprek"
+
+#: /Users/francois/Work/tintin/src/fw/popups/phone.c:543
+msgid "Ringing..."
+msgstr "Gaat over..."
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/notifications.c:406
+msgid "%A %b %d"
+msgstr "%A %d %b"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_factory_reset.c:39
+msgid "Resetting..."
+msgstr "Herstarten..."
+
+#: /Users/francois/Work/tintin/src/fw/apps/watch/simple_analog/simple_analog.c:177
+msgid "Classic Analog"
+msgstr "Classic Analog"
+
+#: /Users/francois/Work/tintin/src/fw/popups/crashed_ui.c:76
+msgid "Worker"
+msgstr "Werker"
+
+#: /Users/francois/Work/tintin/src/fw/popups/crashed_ui.c:76
+msgid "App"
+msgstr "App"
+
+#: /Users/francois/Work/tintin/src/fw/popups/crashed_ui.c:77
+msgid ""
+"%s crashed!\n"
+"%.20s"
+msgstr ""
+"%s gecrasht!\n"
+"%.20s"
+
+#: /Users/francois/Work/tintin/src/fw/popups/crashed_ui.c:86
+msgid "Press any button"
+msgstr "Druk een knop"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_layer.c:193
+msgid "%lu minutes ago"
+msgstr "%lu minuten geleden"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_layer.c:197
+msgid "%lu hours ago"
+msgstr "%lu uur geleden"
+
+#: /Users/francois/Work/tintin/src/fw/services/alarm.c:146
+msgid "Alarm"
+msgstr "Wekker"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_activity_tracker.c:103
+msgid "Active"
+msgstr "Actief"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_activity_tracker.c:103
+msgid "Off"
+msgstr "Uit"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/alarms/alarms.c:48
+msgid "%d minute(s)"
+msgstr "%d min."
+
+#: /Users/francois/Work/tintin/src/fw/popups/switch_worker_ui.c:55
+msgid "Use %s instead of %s for activity tracking?"
+msgstr "Activiteitsmeter %s gebruiken in plaats van %s?"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_about.c:39
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:84
+msgid "Language"
+msgstr "Taal"
+
+#: /Users/francois/Work/tintin/src/fw/popups/bluetooth_ssp_ui.c:82
+msgid "Pair with %s?"
+msgstr "Koppelen met %s?"
+
+msgid "Ready for Update"
+msgstr "Klaar voor update"
+
+#: /Users/francois/Work/tintin/src/fw/apps/system_apps/settings/settings_display.c:100
+msgid "UI"
+msgstr "Gebruikersinterface"
+
+#: /Users/francois/Work/tintin/src/fw/popups/crashed_ui.c:69
+msgid "OH NO!"
+msgstr "OH NEE!"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_layer.c:204
+msgid "%b %d, %R"
+msgstr "%d %b, %R"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_layer.c:206
+msgid "%b %d, %I:%M %p"
+msgstr "%d %b, %I:%M %p"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_window.c:771
+msgid "Use templates..."
+msgstr "Stuur tekst..."
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_window.c:926
+msgid "Ok"
+msgstr "Ok"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_window.c:927
+msgid "Yes"
+msgstr "Ja"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_window.c:928
+msgid "No"
+msgstr "Nee"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_window.c:929
+msgid "Call me"
+msgstr "Bel me"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_window.c:930
+msgid "Call you later"
+msgstr "Bel je later"
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_window.c:1004
+msgid "More..."
+msgstr "Meer..."
+
+#: /Users/francois/Work/tintin/src/fw/popups/notifications/notification_window.c:1269
+msgid "Failed"
+msgstr "Mislukt"

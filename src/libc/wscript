@@ -1,0 +1,24 @@
+import waftools.gitinfo
+
+
+def build(bld):
+    # Collect all the files in the libc directory
+    source_dirs = ['string', 'math', 'stub']
+    sources = sum([bld.path.ant_glob('%s/*.[csS]' % d) for d in source_dirs], [])
+    sources.extend(bld.path.ant_glob('*.[csS]'))
+
+    def build_libc(target, env):
+        # Build the libc directory using firmware environment
+        bld.stlib(source=sources,
+                  target=target,
+                  includes=['include', '.'],
+                  export_includes='include',
+                  cflags=['-fno-lto'],
+                  use='',
+                  env=env.derive())
+
+    bld(export_includes=['include'], name='pblibc_includes')
+    build_libc('pblibc', bld.env)
+    build_libc('pblibc-cm0', bld.all_envs['cortex-m0'])
+
+# vim:filetype=python
