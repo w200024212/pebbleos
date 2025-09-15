@@ -94,6 +94,7 @@ static uint8_t s_ticks_since_successful_feed = 0;
 #define WATCHDOG_FREERTOS_IRQn CAN2_SCE_IRQn
 #define WATCHDOG_FREERTOS_IRQHandler CAN2_SCE_IRQHandler
 #endif
+
 #ifdef MICRO_FAMILY_SF32LB52
 static TimerState s_gtim2_state = {
   .handle = {
@@ -291,35 +292,24 @@ void task_watchdog_init(void) {
 #if MICRO_FAMILY_SF32LB52
   GPT_HandleTypeDef *htim = &(s_gtim2_state.handle);
   uint32_t prescaler_value = 0;
-  HAL_StatusTypeDef ret;
+
   prescaler_value = HAL_RCC_GetPCLKFreq(htim->core, 1);
-
-  prescaler_value = 24000000 / 1000 - 1;    //1kHz
+  prescaler_value = prescaler_value / 1000 - 1;  //1kHz
   htim->Init.Prescaler = prescaler_value;
+  HAL_GPT_Base_Init(htim);
 
-  ret = HAL_GPT_Base_Init(htim);
-  PBL_ASSERTN(ret == HAL_OK);
-
-  /* set the TIMx priority */
-  HAL_NVIC_SetPriority(s_gtim2_state.tim_irqn, 5, 0);
-
-  /* enable the TIMx global Interrupt */
-  HAL_NVIC_EnableIRQ(s_gtim2_state.tim_irqn);
+  NVIC_SetPriority(s_gtim2_state.tim_irqn, configKERNEL_INTERRUPT_PRIORITY);
+  NVIC_EnableIRQ(s_gtim2_state.tim_irqn);
 
   /* clear update flag */
   __HAL_GPT_CLEAR_FLAG(htim, GPT_FLAG_UPDATE);
   /* enable update request source */
   __HAL_GPT_URS_ENABLE(htim);
+
   __HAL_GPT_SET_AUTORELOAD(htim, htim->Init.Period);
+  __HAL_GPT_SET_MODE(htim, GPT_OPMODE_REPETITIVE); 
+  HAL_GPT_Base_Start_IT(htim);
 
-  /* set timer to Repetitive mode */
-  htim->Instance->CR1 &= ~GPT_OPMODE_SINGLE;
-
-  /* start timer */
-  ret = HAL_GPT_Base_Start_IT(htim);
-  PBL_ASSERTN(ret == HAL_OK);
-  watchdog_init();
-  PBL_LOG(LOG_LEVEL_DEBUG, "task_watchdog_init: Initialied");
 #elif !MICRO_FAMILY_NRF5
   // The timer is on ABP1 which is clocked by PCLK1
   RCC_ClocksTypeDef clocks;

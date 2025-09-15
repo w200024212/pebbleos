@@ -177,6 +177,8 @@ int main(void) {
   board_early_init();
   // FIXME(SF32LB52): remove once we have bootloader
   boot_bit_init();
+  /* watchdog use RC10K, must called after board init */
+  watchdog_init();
 #endif
 
   gpio_init_all();

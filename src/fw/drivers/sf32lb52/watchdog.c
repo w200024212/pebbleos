@@ -21,51 +21,42 @@
 #include <inttypes.h>
 #include "bf0_hal.h"
 
-#define WDT_RELOADER_TIMEOUT 3
 #define WDT_REBOOT_TIMEOUT 8
 
 static WDT_HandleTypeDef hwdt = {
     .Instance = hwp_wdt1,
 };
 
-static int s_sys_freq = 0;
-static int s_irq_handle = 0;
-
-void wdt_reconfig(void) {
-  HAL_WDT_Refresh(&hwdt);
-  __HAL_WDT_STOP(&hwdt);
-}
-
 void watchdog_init(void) {
   HAL_StatusTypeDef status;
+  uint32_t sys_freq = 0;
 
   if (HAL_PMU_LXT_ENABLED()) {
-    s_sys_freq = RC32K_FREQ;
+    sys_freq = RC32K_FREQ;
   } else {
-    s_sys_freq = RC10K_FREQ;
+    sys_freq = RC10K_FREQ;
   }
 
-  hwdt.Init.Reload = (uint32_t)WDT_RELOADER_TIMEOUT * s_sys_freq;
-  hwdt.Init.Reload2 = (uint32_t)WDT_REBOOT_TIMEOUT * s_sys_freq;
-  __HAL_WDT_STOP(&hwdt);
+  hwdt.Init.Reload = (uint32_t)WDT_REBOOT_TIMEOUT * sys_freq;
+  HAL_WDT_Init(&hwdt);
   __HAL_WDT_INT(&hwdt, 1);
 
-  status = HAL_WDT_Init(&hwdt);
-  PBL_ASSERTN(status == HAL_OK);
-
   __HAL_SYSCFG_Enable_WDT_REBOOT(1);
-  s_irq_handle = 0;
+
   PBL_LOG(LOG_LEVEL_DEBUG, "watchdog: Initialied");
-  return;
 }
 
-void watchdog_start(void) { __HAL_WDT_START(&hwdt); }
+void watchdog_start(void) {
+  __HAL_WDT_START(&hwdt);
+}
 
 void watchdog_feed(void) { 
   HAL_WDT_Refresh(&hwdt);
 }
 
-bool watchdog_check_reset_flag(void) { return (HAL_PMU_GET_WSR() & PMUC_WSR_WDT1) != 0; }
+bool watchdog_check_reset_flag(void) {
+  return (HAL_PMU_GET_WSR() & PMUC_WSR_WDT1) != 0;
+}
 
 McuRebootReason watchdog_clear_reset_flag(void) {
   uint32_t wsr = HAL_PMU_GET_WSR();
